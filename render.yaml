@@ -3,6 +3,11 @@
 # ================================
 # Deploy with: render blueprint sync
 
+databases:
+  - name: argus-db
+    plan: free
+    region: ohio
+
 services:
   # API Server
   - type: web
@@ -12,14 +17,20 @@ services:
     plan: free
     branch: main
     rootDir: server
-    buildCommand: npm ci
-    startCommand: npm start
+    buildCommand: npm ci && npx prisma generate && npm run build
+    startCommand: npx prisma db push --skip-generate && npm start
     healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: argus-db
+          property: connectionString
       - key: GROQ_API_KEY
         sync: false
+      - key: JWT_SECRET
+        generateValue: true
       - key: CLIENT_URL
         fromService:
           type: web
@@ -53,10 +64,3 @@ services:
           name: argus-server
           property: hostport
     autoDeploy: true
-
-# Environment groups for shared secrets
-envVarGroups:
-  - name: argus-shared
-    envVars:
-      - key: NODE_ENV
-        value: production

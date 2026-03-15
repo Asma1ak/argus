@@ -94,7 +94,7 @@ jobs:
           VITE_API_URL: ${{ vars.VITE_API_URL }}
 
       - name: Deploy to Netlify
-        uses: nwtgck/actions-netlify@v3
+        uses: nwtgck/actions-netlify@v2
         with:
           publish-dir: './client/dist'
           production-branch: main
@@ -196,7 +196,7 @@ jobs:
           target: "/app/argus"
 
       - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.2.5
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
