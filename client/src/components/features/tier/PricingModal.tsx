@@ -12,7 +12,7 @@ interface PricingModalProps {
 
 export function PricingModal({ isOpen, onClose, currentTier = 'free', onUpgrade }: PricingModalProps) {
   const [tiers, setTiers] = useState<Tier[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [_loading, setLoading] = useState(false);
   const [upgrading, setUpgrading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
