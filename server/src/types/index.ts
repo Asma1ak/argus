@@ -31,7 +31,7 @@ export interface AnalysisMetadata {
 
 export interface AnalysisResult {
   id: string;
-  text: string;
+  text?: string;
   score: number;
   summary: string;
   issues: Issue[];
@@ -171,6 +171,7 @@ export interface AppConfig {
 export interface ApiSuccessResponse<T> {
   success: true;
   data: T;
+  timestamp?: string;
   meta?: {
     timestamp: string;
   };
@@ -183,6 +184,7 @@ export interface ApiErrorResponse {
     message: string;
     details?: unknown;
   };
+  timestamp?: string;
 }
 
-export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;
+export type ApiResponse<T = unknown> = ApiSuccessResponse<T> | ApiErrorResponse;

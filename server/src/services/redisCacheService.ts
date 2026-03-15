@@ -289,12 +289,14 @@ export const userCache = {
   get: <T>(key: string) => cache.get<T>(`user:${key}`),
   set: <T>(key: string, value: T, ttl = 300) => cache.set(`user:${key}`, value, ttl),
   delete: (key: string) => cache.delete(`user:${key}`),
+  getStats: () => cache.getStats(),
 };
 
 export const tierCache = {
   get: <T>(key: string) => cache.get<T>(`tier:${key}`),
   set: <T>(key: string, value: T, ttl = 60) => cache.set(`tier:${key}`, value, ttl),
   delete: (key: string) => cache.delete(`tier:${key}`),
+  getStats: () => cache.getStats(),
 };
 
 export default cache;

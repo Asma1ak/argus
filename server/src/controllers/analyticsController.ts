@@ -74,19 +74,19 @@ export const healthController = {
         memory: memoryStats,
         cache: {
           analysis: {
-            entries: cacheStats.analysis.entries,
+            entries: cacheStats.analysis.memoryEntries,
             hitRate: Math.round(cacheStats.analysis.hitRate * 100) + '%',
-            sizeKB: Math.round(cacheStats.analysis.size / 1024),
+            hits: cacheStats.analysis.hits,
           },
           user: {
-            entries: cacheStats.user.entries,
+            entries: cacheStats.user.memoryEntries,
             hitRate: Math.round(cacheStats.user.hitRate * 100) + '%',
-            sizeKB: Math.round(cacheStats.user.size / 1024),
+            hits: cacheStats.user.hits,
           },
           tier: {
-            entries: cacheStats.tier.entries,
+            entries: cacheStats.tier.memoryEntries,
             hitRate: Math.round(cacheStats.tier.hitRate * 100) + '%',
-            sizeKB: Math.round(cacheStats.tier.size / 1024),
+            hits: cacheStats.tier.hits,
           },
         },
       },

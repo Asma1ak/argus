@@ -1,4 +1,4 @@
-import cluster from 'cluster';
+import cluster, { Worker } from 'cluster';
 import os from 'os';
 import logger from '../utils/logger.js';
 import config from '../config/index.js';
@@ -118,7 +118,7 @@ class ClusterManager {
   /**
    * Fork a new worker
    */
-  private forkWorker(): cluster.Worker {
+  private forkWorker(): Worker {
     const worker = cluster.fork({
       ...process.env,
       WORKER_ID: String(cluster.workers ? Object.keys(cluster.workers).length + 1 : 1),
@@ -130,7 +130,7 @@ class ClusterManager {
   /**
    * Handle worker exit
    */
-  private handleWorkerExit(worker: cluster.Worker, code: number, signal: string): void {
+  private handleWorkerExit(worker: Worker, code: number, signal: string): void {
     this.workers.delete(worker.id);
     
     logger.warn(`Worker ${worker.id} died (code: ${code}, signal: ${signal})`);
@@ -221,7 +221,7 @@ class ClusterManager {
   /**
    * Send message to all workers
    */
-  broadcast(message: unknown): void {
+  broadcast(message: Record<string, unknown>): void {
     if (!cluster.isPrimary) return;
 
     for (const id in cluster.workers) {

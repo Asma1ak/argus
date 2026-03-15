@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -180,11 +180,11 @@ function createApp(): express.Application {
     });
   });
 
-  app.get('/health/live', (_req, res) => {
+  app.get('/health/live', (_req: Request, res: Response) => {
     res.json({ status: 'ok' });
   });
 
-  app.get('/health/ready', async (_req, res) => {
+  app.get('/health/ready', async (_req: Request, res: Response) => {
     const redisHealthy = await cache.healthCheck();
     const dbHealthy = await checkDatabaseHealth();
     

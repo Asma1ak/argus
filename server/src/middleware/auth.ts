@@ -8,7 +8,7 @@ import logger from '../utils/logger.js';
 /**
  * Wrap async middleware to catch errors
  */
-function asyncMiddleware(fn: (req: AuthRequest, res: Response, next: NextFunction) => Promise<void>) {
+function asyncMiddleware(fn: (req: AuthRequest, res: Response, next: NextFunction) => Promise<void | Response>) {
   return (req: AuthRequest, res: Response, next: NextFunction) => {
     Promise.resolve(fn(req, res, next)).catch(next);
   };
@@ -125,7 +125,7 @@ export const optionalAuth = asyncMiddleware(async (req: AuthRequest, res: Respon
 /**
  * Verify download token for secure file downloads
  */
-export function verifyDownloadToken(req: AuthRequest, res: Response, next: NextFunction) {
+export function verifyDownloadToken(req: AuthRequest, res: Response, next: NextFunction): void | Response {
   try {
     const downloadToken = req.query.downloadToken as string;
     

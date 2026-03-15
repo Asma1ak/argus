@@ -222,7 +222,8 @@ class UrlExtractorService {
   /**
    * Extract metadata from HTML
    */
-  private extractMetadata($: cheerio.CheerioAPI): Partial<ExtractedContent> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private extractMetadata($: any): Partial<ExtractedContent> {
     // Title
     const title = 
       $('meta[property="og:title"]').attr('content') ||
@@ -264,14 +265,16 @@ class UrlExtractorService {
   /**
    * Extract main content from HTML
    */
-  private extractContent($: cheerio.CheerioAPI): string {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private extractContent($: any): string {
     // Remove unwanted elements
     REMOVE_SELECTORS.forEach(selector => {
       $(selector).remove();
     });
 
     // Try to find main content using selectors
-    let contentElement: cheerio.Cheerio<cheerio.Element> | null = null;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let contentElement: any = null;
     
     for (const selector of CONTENT_SELECTORS) {
       const elements = $(selector);
@@ -297,7 +300,8 @@ class UrlExtractorService {
     // Extract paragraphs and headings
     const textParts: string[] = [];
     
-    contentElement!.find('h1, h2, h3, h4, h5, h6, p, li, blockquote, td, th').each((_, el) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    contentElement!.find('h1, h2, h3, h4, h5, h6, p, li, blockquote, td, th').each((_: number, el: any) => {
       const text = $(el).text().trim();
       if (text.length > 0) {
         // Add newlines for headings

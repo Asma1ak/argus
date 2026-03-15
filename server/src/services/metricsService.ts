@@ -23,7 +23,7 @@ interface Histogram {
 }
 
 interface Timer {
-  startTime: number;
+  startTime: bigint;
   labels: Record<string, string>;
 }
 
@@ -135,7 +135,7 @@ class MetricsService extends EventEmitter {
     return () => {
       const timer = this.activeTimers.get(timerId);
       if (timer) {
-        const duration = Number(process.hrtime.bigint() - BigInt(timer.startTime)) / 1e6; // ms
+        const duration = Number(process.hrtime.bigint() - timer.startTime) / 1e6; // ms
         this.observeHistogram(name, duration, timer.labels);
         this.activeTimers.delete(timerId);
         return duration;
