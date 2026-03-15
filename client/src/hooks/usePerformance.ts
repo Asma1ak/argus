@@ -27,7 +27,7 @@ export function useThrottle<T extends (...args: unknown[]) => unknown>(
   delay: number
 ): T {
   const lastCall = useRef(0);
-  const timeout = useRef<NodeJS.Timeout | null>(null);
+  const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   return useCallback(
     ((...args: unknown[]) => {
@@ -56,7 +56,7 @@ export function useThrottle<T extends (...args: unknown[]) => unknown>(
  */
 export function useIntersectionObserver(
   options: IntersectionObserverInit = {}
-): [React.RefObject<HTMLDivElement>, boolean] {
+): [React.RefObject<HTMLDivElement | null>, boolean] {
   const [isIntersecting, setIsIntersecting] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 

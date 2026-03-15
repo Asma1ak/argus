@@ -24,11 +24,14 @@ export function PricingModal({ isOpen, onClose, currentTier = 'free', onUpgrade 
   }, [isOpen]);
 
   const loadTiers = async () => {
+    setLoading(true);
     try {
       const { tiers } = await api.getTiers();
       setTiers(tiers);
     } catch (err) {
       console.error('Failed to load tiers:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
