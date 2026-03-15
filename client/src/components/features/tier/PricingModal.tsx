@@ -23,7 +23,7 @@ export function PricingModal({ isOpen, onClose, currentTier = 'free', onUpgrade 
     }
   }, [isOpen]);
 
-  const loadTiers = async () => {
+    const loadTiers = async () => {
     setLoading(true);
     try {
       const { tiers } = await api.getTiers();
