@@ -94,7 +94,7 @@ jobs:
           VITE_API_URL: ${{ vars.VITE_API_URL }}
 
       - name: Deploy to Netlify
-        uses: nwtgck/actions-netlify@v2
+        uses: nwtgck/actions-netlify@v3
         with:
           publish-dir: './client/dist'
           production-branch: main
