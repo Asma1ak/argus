@@ -17,8 +17,8 @@ services:
     plan: free
     branch: main
     rootDir: server
-    buildCommand: npm ci --include=dev && npx prisma generate && npm run build
-    startCommand: npx prisma db push --skip-generate && npm start
+    buildCommand: npm ci --include=dev && npx prisma generate && npm run build && npx prisma db push --url $DATABASE_URL
+    startCommand: npm start
     healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
