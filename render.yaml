@@ -31,7 +31,6 @@ services:
   - type: web
     name: argus-client
     env: static
-    region: ohio
     plan: free
     branch: main
     rootDir: client
