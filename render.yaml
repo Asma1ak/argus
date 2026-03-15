@@ -31,7 +31,6 @@ services:
   - type: web
     name: argus-client
     env: static
-    plan: free
     branch: main
     rootDir: client
     buildCommand: npm ci && npm run build
