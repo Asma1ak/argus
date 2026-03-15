@@ -281,7 +281,8 @@ class UrlExtractorService {
       if (elements.length > 0) {
         // Pick the one with most text content
         let maxLength = 0;
-        elements.each((_, el) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        elements.each((_: number, el: any) => {
           const text = $(el).text().trim();
           if (text.length > maxLength) {
             maxLength = text.length;

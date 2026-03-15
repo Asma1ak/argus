@@ -12,6 +12,7 @@ interface PricingModalProps {
 
 export function PricingModal({ isOpen, onClose, currentTier = 'free', onUpgrade }: PricingModalProps) {
   const [tiers, setTiers] = useState<Tier[]>([]);
+  const [loading, setLoading] = useState(false);
   const [upgrading, setUpgrading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -22,12 +23,15 @@ export function PricingModal({ isOpen, onClose, currentTier = 'free', onUpgrade 
     }
   }, [isOpen]);
 
-const loadTiers = async () => {
+  const loadTiers = async () => {
+    setLoading(true);
     try {
       const { tiers } = await api.getTiers();
       setTiers(tiers);
     } catch (err) {
       console.error('Failed to load tiers:', err);
+    } finally {
+      setLoading(false);
     }
   };
 

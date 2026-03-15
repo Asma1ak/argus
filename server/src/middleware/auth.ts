@@ -169,7 +169,7 @@ export const requireAdmin = asyncMiddleware(async (req: AuthRequest, res: Respon
     
     // For now, allow all authenticated users
     // In production, check for admin role in database
-    next();
+    return next();
   } catch {
     return sendError(res, Errors.Unauthorized('Invalid or expired session'));
   }

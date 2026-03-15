@@ -271,7 +271,8 @@ MIT License - feel free to use in your portfolio!
 
 **Your Name**
 
-- GitHub: [@yourusername](https://github.com/Asma1ak) 
+- GitHub: [@yourusername](https://github.com/yourusername)
+- LinkedIn: [yourname](https://linkedin.com/in/yourname)
 
 ---
 
