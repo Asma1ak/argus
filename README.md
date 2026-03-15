@@ -7,28 +7,28 @@ A production-grade, full-stack web application that analyzes text for logical fa
 ![React](https://img.shields.io/badge/React-18-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
-## ✨ Features
+## Features
 
 ### Core Features
-- 🔍 **AI-Powered Analysis** - Detects logical fallacies, cognitive biases, heuristics, and manipulation tactics
-- 📊 **Logic Score** - Rates text from 0-100 based on reasoning quality
-- 🌓 **Dark/Light Theme** - System-aware theme with manual toggle
-- 📱 **PWA Support** - Installable on mobile, works offline
-- 🔗 **Share & Export** - Generate share links, export to PDF/JSON
+- **AI-Powered Analysis** - Detects logical fallacies, cognitive biases, heuristics, and manipulation tactics
+- **Logic Score** - Rates text from 0-100 based on reasoning quality
+- **Dark/Light Theme** - System-aware theme with manual toggle
+- **PWA Support** - Installable on mobile, works offline
+- **Share & Export** - Generate share links, export to PDF/JSON
 
 ### User Features
-- 👤 **User Accounts** - Register, login, save analysis history
-- 📜 **Analysis History** - View and manage past analyses
-- 📈 **Analytics Dashboard** - Track usage statistics and trends
-- ⚙️ **Preferences** - Customize theme and notifications
+- **User Accounts** - Register, login, save analysis history
+- **Analysis History** - View and manage past analyses
+- **Analytics Dashboard** - Track usage statistics and trends
+- **Preferences** - Customize theme and notifications
 
 ### Technical Features
-- 🔷 **TypeScript** - Full type safety across frontend and backend
-- 🧪 **E2E Testing** - Comprehensive Playwright test suite
-- 🐳 **Docker Ready** - One-command deployment
-- 🔄 **CI/CD** - GitHub Actions pipeline
+- **TypeScript** - Full type safety across frontend and backend
+- **E2E Testing** - Comprehensive Playwright test suite
+- **Docker Ready** - One-command deployment
+- **CI/CD** - GitHub Actions pipeline
 
-## 🏗️ Tech Stack
+## Tech Stack
 
 | Layer | Technologies |
 |-------|-------------|
@@ -41,7 +41,7 @@ A production-grade, full-stack web application that analyzes text for logical fa
 | **PWA** | Vite PWA Plugin, Workbox |
 | **DevOps** | Docker, GitHub Actions |
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 argus/
@@ -76,7 +76,7 @@ argus/
 └── docker-compose.yml
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -110,7 +110,7 @@ npm install
 npm run dev
 ```
 
-Visit `http://localhost:5173` 🎉
+Visit `http://localhost:5173`
 
 ### Docker Setup
 
@@ -122,7 +122,7 @@ export GROQ_API_KEY=your_key_here
 docker compose up --build
 ```
 
-## 🧪 Testing
+## Testing
 
 ### E2E Tests (Playwright)
 
@@ -149,7 +149,7 @@ cd server && npm test
 cd client && npm test
 ```
 
-## 📡 API Reference
+## API Reference
 
 ### Authentication
 
@@ -178,7 +178,7 @@ cd client && npm test
 | POST | `/api/analytics/track` | Track event |
 | GET | `/api/analytics/dashboard` | Get dashboard data |
 
-## 🎨 Theme System
+## Theme System
 
 Argus supports three theme modes:
 
@@ -192,21 +192,21 @@ Themes are persisted in localStorage and synced with user preferences when logge
 const { theme, setTheme, toggleTheme } = useTheme();
 ```
 
-## 📱 PWA Features
+## PWA Features
 
 - ✅ Installable on mobile and desktop
 - ✅ Offline support for cached pages
 - ✅ App-like experience
 - ✅ Push notification ready
 
-## 🔐 Authentication Flow
+## Authentication Flow
 
 1. **Register** - Create account with email/password
 2. **Login** - Receive JWT token
 3. **Auth Header** - Include `Authorization: Bearer <token>`
 4. **Persistence** - Token stored in localStorage
 
-## 📊 Analytics Dashboard
+## Analytics Dashboard
 
 Track and visualize:
 
@@ -215,7 +215,7 @@ Track and visualize:
 - Score distribution
 - Most common issues detected
 
-## 📤 Export & Share
+## Export & Share
 
 ### Export Formats
 - **PDF** - Formatted report with score, summary, and issues
@@ -226,7 +226,7 @@ Track and visualize:
 - Anyone with the link can view the analysis
 - No authentication required for viewing
 
-## 🚢 Deployment
+## Deployment
 
 ### Environment Variables
 
@@ -252,7 +252,7 @@ VITE_API_URL=https://api.your-domain.com
 | Render | `render.yaml` |
 | Docker | `docker-compose.yml` |
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create feature branch (`git checkout -b feature/amazing`)
@@ -263,21 +263,13 @@ VITE_API_URL=https://api.your-domain.com
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-## 📝 License
+## License
 
-MIT License - feel free to use in your portfolio!
-
-## 👤 Author
-
-**Your Name**
-
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [yourname](https://linkedin.com/in/yourname)
+MIT License
 
 ---
 
 <p align="center">
-  Built with 🧠 for critical thinkers
   <br/>
   <sub>TypeScript • React • Node.js • AI-Powered</sub>
 </p>
