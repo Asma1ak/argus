@@ -1,0 +1,140 @@
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.tierBadge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tierBadge[data-tier="free"] {
+  background: rgba(148, 163, 184, 0.2);
+  color: #94a3b8;
+}
+
+.tierBadge[data-tier="pro"] {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(168, 85, 247, 0.2));
+  color: #a78bfa;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+.tierBadge[data-tier="enterprise"] {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(245, 158, 11, 0.2));
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.tierBadge.skeleton {
+  width: 50px;
+  height: 24px;
+  background: linear-gradient(
+    90deg,
+    var(--bg-elevated) 0%,
+    var(--border) 50%,
+    var(--bg-elevated) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.usageBar.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-elevated) 0%,
+    var(--border) 50%,
+    var(--bg-elevated) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.usageInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.usageBar {
+  width: 60px;
+  height: 6px;
+  background: var(--bg-elevated);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.usageProgress {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.usageProgress[data-low="true"] {
+  background: var(--danger);
+}
+
+.usageText {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.usageText[data-low="true"] {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.upgradeBtn {
+  padding: 0.375rem 0.75rem;
+  background: linear-gradient(135deg, var(--primary), #a855f7);
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  white-space: nowrap;
+}
+
+.upgradeBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+/* Mobile responsive */
+@media (max-width: 640px) {
+  .badge {
+    gap: 0.5rem;
+  }
+  
+  .usageInfo {
+    display: none; /* Hide progress bar on small screens */
+  }
+  
+  .tierBadge {
+    font-size: 0.65rem;
+    padding: 0.2rem 0.4rem;
+  }
+  
+  .upgradeBtn {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .upgradeBtn {
+    display: none; /* Show only tier badge on very small screens */
+  }
+}

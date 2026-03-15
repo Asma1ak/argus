@@ -1,0 +1,39 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers: []
+
+rule_files: []
+
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Argus API servers
+  - job_name: 'argus-api'
+    dns_sd_configs:
+      - names:
+          - 'api'
+        type: 'A'
+        port: 3001
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        regex: '(.+):3001'
+        replacement: '${1}'
+
+  # Nginx status
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['nginx:8080']
+    metrics_path: /nginx_status
+
+  # Redis metrics (requires redis_exporter)
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis:6379']
+    metrics_path: /metrics

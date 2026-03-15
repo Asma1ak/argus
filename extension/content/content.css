@@ -1,0 +1,252 @@
+/* Argus Extension Styles */
+
+#argus-loading {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  background: #1e293b;
+  color: #f1f5f9;
+  border-radius: 10px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  z-index: 2147483647;
+}
+
+.argus-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(99, 102, 241, 0.3);
+  border-top-color: #6366f1;
+  border-radius: 50%;
+  animation: argus-spin 0.8s linear infinite;
+}
+
+@keyframes argus-spin {
+  to { transform: rotate(360deg); }
+}
+
+#argus-tooltip {
+  position: absolute;
+  max-width: 400px;
+  max-height: 500px;
+  overflow-y: auto;
+  background: #1e293b;
+  color: #f1f5f9;
+  border-radius: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+  z-index: 2147483647;
+  border: 1px solid #334155;
+}
+
+#argus-tooltip.argus-error {
+  border-color: #ef4444;
+}
+
+.argus-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #334155;
+  font-weight: 600;
+}
+
+.argus-close {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.argus-close:hover {
+  color: #f1f5f9;
+}
+
+.argus-score-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 1px solid #334155;
+}
+
+.argus-score {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.argus-score.high {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+  border: 2px solid #10b981;
+}
+
+.argus-score.medium {
+  background: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
+  border: 2px solid #f59e0b;
+}
+
+.argus-score.low {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border: 2px solid #ef4444;
+}
+
+.argus-summary {
+  font-size: 13px;
+  color: #94a3b8;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.argus-issues {
+  padding: 12px;
+}
+
+.argus-issue {
+  background: #0f172a;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-left: 3px solid;
+}
+
+.argus-issue.low { border-left-color: #10b981; }
+.argus-issue.medium { border-left-color: #f59e0b; }
+.argus-issue.high { border-left-color: #ef4444; }
+
+.argus-issue:last-child {
+  margin-bottom: 0;
+}
+
+.argus-issue-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.argus-issue-type {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.argus-severity {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.argus-severity.low {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+.argus-severity.medium {
+  background: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
+}
+
+.argus-severity.high {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.argus-quote {
+  background: rgba(99, 102, 241, 0.15);
+  border-left: 3px solid #6366f1;
+  padding: 8px 12px;
+  margin: 8px 0;
+  font-style: italic;
+  color: #cbd5e1;
+  border-radius: 0 6px 6px 0;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.argus-explanation {
+  font-size: 12px;
+  color: #cbd5e1;
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+}
+
+.argus-suggestion {
+  font-size: 12px;
+  color: #94a3b8;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.argus-counter {
+  margin-top: 10px;
+  padding: 10px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(6, 182, 212, 0.1));
+  border-radius: 6px;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.argus-counter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 12px;
+  color: #f1f5f9;
+}
+
+.argus-copy-btn {
+  padding: 3px 8px;
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  border-radius: 4px;
+  color: #10b981;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.argus-copy-btn:hover {
+  background: rgba(16, 185, 129, 0.3);
+}
+
+.argus-counter-text {
+  color: #e2e8f0;
+  font-style: italic;
+  font-size: 12px;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.argus-clean {
+  text-align: center;
+  padding: 10px;
+  color: #10b981;
+  margin: 0;
+}
+
+#argus-tooltip.argus-error p {
+  padding: 12px 16px;
+  margin: 0;
+  color: #fca5a5;
+}

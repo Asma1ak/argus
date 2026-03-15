@@ -1,0 +1,45 @@
+# ================================
+# Argus Docker Compose - Development
+# ================================
+# Usage: docker compose -f docker-compose.dev.yml up
+
+version: '3.8'
+
+services:
+  # Backend API with hot reload
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+    container_name: argus-server-dev
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - GROQ_API_KEY=${GROQ_API_KEY}
+    volumes:
+      - ./server/src:/app/src:ro
+    networks:
+      - argus-network-dev
+
+  # Frontend with Vite dev server
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    container_name: argus-client-dev
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:3001/api
+    volumes:
+      - ./client/src:/app/src:ro
+    depends_on:
+      - server
+    networks:
+      - argus-network-dev
+
+networks:
+  argus-network-dev:
+    driver: bridge

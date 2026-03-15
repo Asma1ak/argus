@@ -1,0 +1,187 @@
+.container {
+  position: relative;
+}
+
+.tip {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  width: max-content;
+  max-width: 320px;
+  padding: 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--primary);
+  border-radius: var(--radius);
+  box-shadow: 0 10px 40px rgba(99, 102, 241, 0.2);
+  animation: fadeSlideIn 0.3s ease-out;
+}
+
+.tip.top {
+  bottom: 100%;
+  margin-bottom: 12px;
+}
+
+.tip.bottom {
+  top: 100%;
+  margin-top: 12px;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.tipContent {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.tipIcon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.tipTitle {
+  display: block;
+  color: var(--text);
+  margin-bottom: 0.25rem;
+}
+
+.tipDescription {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.tipDismiss {
+  width: 100%;
+  padding: 0.5rem;
+  background: var(--primary);
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.tipDismiss:hover {
+  background: var(--primary-dark);
+}
+
+.tipArrow {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+}
+
+.tip.top .tipArrow {
+  bottom: -8px;
+  border-top: 8px solid var(--primary);
+}
+
+.tip.bottom .tipArrow {
+  top: -8px;
+  border-bottom: 8px solid var(--primary);
+}
+
+/* Welcome Banner */
+.welcomeBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1));
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: var(--radius);
+  margin-bottom: 1.5rem;
+  animation: fadeSlideIn 0.3s ease-out;
+}
+
+.welcomeContent {
+  display: flex;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.welcomeIcon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.welcomeContent strong {
+  display: block;
+  color: var(--text);
+  margin-bottom: 0.25rem;
+}
+
+.welcomeContent p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.welcomeDismiss {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.welcomeDismiss:hover {
+  opacity: 1;
+}
+
+@media (max-width: 480px) {
+  .tip {
+    left: 0;
+    right: 0;
+    transform: none;
+    max-width: none;
+    margin: 0 1rem;
+    position: fixed;
+    top: auto;
+    bottom: 1rem;
+  }
+  
+  .tip.top, .tip.bottom {
+    top: auto;
+    bottom: 1rem;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  
+  .tipArrow {
+    display: none;
+  }
+  
+  .welcomeBanner {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .welcomeDismiss {
+    align-self: flex-end;
+    margin-top: -2.5rem;
+  }
+}

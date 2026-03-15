@@ -1,0 +1,280 @@
+# ================================
+# Continuous Deployment Workflow
+# ================================
+# Deploys to production on push to main
+# Supports: Vercel, Render, Railway, Fly.io
+
+name: CD
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - staging
+          - production
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  # ================================
+  # Deploy Client to Vercel
+  # ================================
+  deploy-client-vercel:
+    name: Deploy Client (Vercel)
+    runs-on: ubuntu-latest
+    if: vars.DEPLOY_CLIENT_TO == 'vercel'
+    environment:
+      name: ${{ inputs.environment || 'production' }}
+      url: ${{ steps.deploy.outputs.url }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Pull Vercel environment
+        working-directory: ./client
+        run: vercel pull --yes --environment=${{ inputs.environment || 'production' }} --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build project
+        working-directory: ./client
+        run: vercel build ${{ inputs.environment == 'production' && '--prod' || '' }} --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy to Vercel
+        id: deploy
+        working-directory: ./client
+        run: |
+          URL=$(vercel deploy --prebuilt ${{ inputs.environment == 'production' && '--prod' || '' }} --token=${{ secrets.VERCEL_TOKEN }})
+          echo "url=$URL" >> $GITHUB_OUTPUT
+
+  # ================================
+  # Deploy Client to Netlify
+  # ================================
+  deploy-client-netlify:
+    name: Deploy Client (Netlify)
+    runs-on: ubuntu-latest
+    if: vars.DEPLOY_CLIENT_TO == 'netlify'
+    environment:
+      name: ${{ inputs.environment || 'production' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./client
+        run: npm ci
+
+      - name: Build
+        working-directory: ./client
+        run: npm run build
+        env:
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v2
+        with:
+          publish-dir: './client/dist'
+          production-branch: main
+          production-deploy: ${{ inputs.environment == 'production' || github.ref == 'refs/heads/main' }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Deploy from GitHub Actions"
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+  # ================================
+  # Deploy Server to Render
+  # ================================
+  deploy-server-render:
+    name: Deploy Server (Render)
+    runs-on: ubuntu-latest
+    if: vars.DEPLOY_SERVER_TO == 'render'
+    environment:
+      name: ${{ inputs.environment || 'production' }}
+    
+    steps:
+      - name: Deploy to Render
+        run: |
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+
+  # ================================
+  # Deploy Server to Railway
+  # ================================
+  deploy-server-railway:
+    name: Deploy Server (Railway)
+    runs-on: ubuntu-latest
+    if: vars.DEPLOY_SERVER_TO == 'railway'
+    environment:
+      name: ${{ inputs.environment || 'production' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy to Railway
+        working-directory: ./server
+        run: railway up --service argus-server
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+  # ================================
+  # Deploy to Fly.io (Full Stack)
+  # ================================
+  deploy-fly:
+    name: Deploy to Fly.io
+    runs-on: ubuntu-latest
+    if: vars.DEPLOY_TO == 'fly'
+    environment:
+      name: ${{ inputs.environment || 'production' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Fly CLI
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy Server
+        working-directory: ./server
+        run: flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: Deploy Client
+        working-directory: ./client
+        run: flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+  # ================================
+  # Deploy with Docker Compose
+  # ================================
+  deploy-docker:
+    name: Deploy (Docker/VPS)
+    runs-on: ubuntu-latest
+    if: vars.DEPLOY_TO == 'docker'
+    environment:
+      name: ${{ inputs.environment || 'production' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Copy files to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          source: "docker-compose.yml,server/,client/"
+          target: "/app/argus"
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /app/argus
+            export GROQ_API_KEY=${{ secrets.GROQ_API_KEY }}
+            docker compose pull
+            docker compose up -d --build
+            docker system prune -f
+
+  # ================================
+  # Post-Deployment Health Check
+  # ================================
+  health-check:
+    name: Health Check
+    runs-on: ubuntu-latest
+    needs: [deploy-client-vercel, deploy-client-netlify, deploy-server-render, deploy-server-railway, deploy-fly, deploy-docker]
+    if: always() && !cancelled()
+    
+    steps:
+      - name: Wait for deployment
+        run: sleep 30
+
+      - name: Check API health
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" ${{ vars.API_URL }}/health)
+          if [ "$response" != "200" ]; then
+            echo "Health check failed with status $response"
+            exit 1
+          fi
+          echo "API is healthy!"
+
+      - name: Check client health
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" ${{ vars.CLIENT_URL }})
+          if [ "$response" != "200" ]; then
+            echo "Client health check failed with status $response"
+            exit 1
+          fi
+          echo "Client is healthy!"
+
+      - name: Notify on success
+        if: success()
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          payload: |
+            {
+              "text": "✅ Argus deployed successfully to ${{ inputs.environment || 'production' }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "✅ *Argus Deployment Successful*\n• Environment: ${{ inputs.environment || 'production' }}\n• Commit: ${{ github.sha }}\n• By: ${{ github.actor }}"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify on failure
+        if: failure()
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          payload: |
+            {
+              "text": "❌ Argus deployment failed",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "❌ *Argus Deployment Failed*\n• Environment: ${{ inputs.environment || 'production' }}\n• Commit: ${{ github.sha }}\n• <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Logs>"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

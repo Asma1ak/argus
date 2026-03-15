@@ -1,0 +1,183 @@
+// ================================
+// Argus Database Schema
+// ================================
+// Using SQLite for development, easy to switch to PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// User account
+model User {
+  id            String     @id @default(cuid())
+  email         String     @unique
+  passwordHash  String
+  name          String?
+  avatar        String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  
+  // Subscription tier: "free" | "pro" | "enterprise"
+  tier          String     @default("free")
+  tierExpiresAt DateTime?  // null = no expiry (enterprise or free)
+  
+  // API Key for programmatic access
+  apiKey        String?    @unique
+  apiKeyCreatedAt DateTime?
+  
+  // Relations
+  analyses      Analysis[]
+  preferences   UserPreferences?
+  subscription  Subscription?
+  usageLogs     UsageLog[]
+  
+  // Analytics
+  analysisCount Int        @default(0)
+  lastActiveAt  DateTime   @default(now())
+}
+
+// Subscription history
+model Subscription {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Current plan
+  tier          String   @default("free") // "free" | "pro" | "enterprise"
+  status        String   @default("active") // "active" | "cancelled" | "expired" | "trial"
+  
+  // Billing (for future payment integration)
+  stripeCustomerId    String?
+  stripeSubscriptionId String?
+  
+  // Dates
+  currentPeriodStart  DateTime @default(now())
+  currentPeriodEnd    DateTime?
+  cancelledAt         DateTime?
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// Daily usage tracking per user
+model UsageLog {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  date          DateTime // Date only (no time), stored as start of day
+  analysisCount Int      @default(0)
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  @@unique([userId, date])
+  @@index([userId])
+  @@index([date])
+}
+
+// User preferences (theme, etc.)
+model UserPreferences {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  theme         String   @default("dark") // "dark" | "light" | "system"
+  emailNotifications Boolean @default(true)
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// Analysis result
+model Analysis {
+  id            String   @id @default(cuid())
+  userId        String?
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  // Input
+  text          String
+  textLength    Int
+  textHash      String?  // SHA-256 hash for duplicate detection/caching
+  
+  // Result
+  summary       String
+  score         Int
+  issues        String   // JSON string of issues array
+  issueCount    Int
+  
+  // Metadata
+  model         String   @default("llama-3.1-70b-versatile")
+  processingMs  Int      @default(0)
+  language      String   @default("auto")
+  
+  // Sharing
+  shareId       String?  @unique
+  isPublic      Boolean  @default(false)
+  
+  createdAt     DateTime @default(now())
+  
+  // Analytics relation
+  analyticsEvents AnalyticsEvent[]
+  
+  // Performance indexes
+  @@index([userId, createdAt(sort: Desc)])  // User history queries
+  @@index([textHash])                        // Duplicate detection
+  @@index([createdAt(sort: Desc)])          // Recent analyses
+  @@index([score])                           // Score-based filtering
+}
+
+// Analytics events
+model AnalyticsEvent {
+  id            String    @id @default(cuid())
+  
+  // Event info
+  event         String    // "analysis_created" | "analysis_shared" | "analysis_exported" | "page_view"
+  properties    String?   // JSON string of additional properties
+  
+  // Context
+  analysisId    String?
+  analysis      Analysis? @relation(fields: [analysisId], references: [id], onDelete: SetNull)
+  userId        String?
+  sessionId     String?
+  
+  // Request info
+  userAgent     String?
+  ipHash        String?   // Hashed for privacy
+  referrer      String?
+  
+  createdAt     DateTime  @default(now())
+  
+  @@index([event])
+  @@index([createdAt])
+  @@index([userId])
+}
+
+// Daily aggregated analytics
+model AnalyticsDaily {
+  id              String   @id @default(cuid())
+  date            DateTime @unique
+  
+  // Counts
+  totalAnalyses   Int      @default(0)
+  totalUsers      Int      @default(0)
+  newUsers        Int      @default(0)
+  totalShares     Int      @default(0)
+  totalExports    Int      @default(0)
+  
+  // Averages
+  avgScore        Float    @default(0)
+  avgIssueCount   Float    @default(0)
+  avgTextLength   Float    @default(0)
+  
+  // Issue type breakdown (JSON)
+  issueBreakdown  String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}

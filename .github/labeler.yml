@@ -1,0 +1,67 @@
+# ================================
+# PR Labeler Configuration
+# ================================
+# Automatically labels PRs based on changed files
+
+# Backend changes
+backend:
+  - changed-files:
+    - any-glob-to-any-file: 'server/**/*'
+
+# Frontend changes  
+frontend:
+  - changed-files:
+    - any-glob-to-any-file: 'client/**/*'
+
+# Extension changes
+extension:
+  - changed-files:
+    - any-glob-to-any-file: 'extension/**/*'
+
+# Documentation
+documentation:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*.md'
+      - 'docs/**/*'
+
+# CI/CD changes
+ci-cd:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '.github/**/*'
+      - 'docker-compose*.yml'
+      - '**/Dockerfile*'
+
+# Dependencies
+dependencies:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/package.json'
+      - '**/package-lock.json'
+
+# Configuration
+config:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/.env*'
+      - '**/vite.config.*'
+      - '**/nginx.conf'
+      - '.eslintrc*'
+      - '.prettierrc*'
+
+# Tests
+tests:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/__tests__/**/*'
+      - '**/*.test.*'
+      - '**/*.spec.*'
+
+# Styles
+styles:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*.css'
+      - '**/*.scss'
+      - '**/*.sass'

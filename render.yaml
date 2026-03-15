@@ -1,0 +1,64 @@
+# ================================
+# Render Blueprint
+# ================================
+# Deploy with: render blueprint sync
+
+services:
+  # API Server
+  - type: web
+    name: argus-server
+    env: node
+    region: ohio
+    plan: free
+    branch: main
+    rootDir: server
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: GROQ_API_KEY
+        sync: false
+      - key: CLIENT_URL
+        fromService:
+          type: web
+          name: argus-client
+          property: host
+    autoDeploy: true
+
+  # Static Site (Client)
+  - type: web
+    name: argus-client
+    env: static
+    region: ohio
+    plan: free
+    branch: main
+    rootDir: client
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: argus-server
+          property: hostport
+    autoDeploy: true
+
+# Environment groups for shared secrets
+envVarGroups:
+  - name: argus-shared
+    envVars:
+      - key: NODE_ENV
+        value: production

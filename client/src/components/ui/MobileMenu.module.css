@@ -1,0 +1,216 @@
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.bar {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.hamburger .bar.open:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.hamburger .bar.open:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger .bar.open:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.menu {
+  position: fixed;
+  top: 0;
+  right: -300px;
+  width: 300px;
+  height: 100vh;
+  background: var(--bg-card);
+  border-left: 1px solid var(--border);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  transition: right 0.3s ease;
+  overflow-y: auto;
+}
+
+.menu.open {
+  right: 0;
+}
+
+.menuHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.menuTitle {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.userInfo {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), #a855f7);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.userDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.userName {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.userEmail {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.tierBadge {
+  font-size: 0.7rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  width: fit-content;
+  margin-top: 0.25rem;
+}
+
+.tierBadge.free {
+  background: rgba(100, 116, 139, 0.2);
+  color: #94a3b8;
+}
+
+.tierBadge.pro {
+  background: rgba(99, 102, 241, 0.2);
+  color: var(--primary);
+}
+
+.tierBadge.enterprise {
+  background: rgba(168, 85, 247, 0.2);
+  color: #a855f7;
+}
+
+.links {
+  flex: 1;
+  padding: 0.5rem 0;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: background 0.2s;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.link:hover {
+  background: var(--bg-elevated);
+}
+
+.linkIcon {
+  font-size: 1.1rem;
+  width: 24px;
+  text-align: center;
+}
+
+.link.upgrade {
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.link.register {
+  color: var(--success);
+  font-weight: 500;
+}
+
+.link.logout {
+  color: var(--danger);
+}
+
+.menuFooter {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+.menuFooter p {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Show on mobile only */
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+  
+  .overlay {
+    display: block;
+  }
+}
+
+/* Safe area for notched devices */
+@supports (padding: max(0px)) {
+  .menu {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
