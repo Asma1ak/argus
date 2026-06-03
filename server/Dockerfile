@@ -2,7 +2,7 @@
 # Argus Server Dockerfile
 # ================================
 
-FROM node:20-alpine AS base
+FROM node:26-alpine AS base
 
 # Build stage
 FROM base AS builder
